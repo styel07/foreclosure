@@ -58,7 +58,7 @@ function borrower(loan) {
   borrower.makePayment = function() {
     if (account.funds >= loan.getMonthlyPayment()) {
       account.funds -= loan.getMonthlyPayment();
-      loan.receivePayment(account);
+      loan.receivePayment(loan.getMonthlyPayment());
     } else {
       loan.receivePayment(account.funds);
       account.funds = 0;
