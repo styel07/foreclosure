@@ -44,7 +44,7 @@ function loan() {
 }
 
 function borrower(loan) {
-
+  var borrower = {};
   var account = {
     monthlyIncome : 1350,
     funds : 2800,
@@ -56,18 +56,29 @@ function borrower(loan) {
   };
 
   borrower.makePayment = function() {
-    if (account.funds > loan.monthlyPayment) {
-      account.funds -= loan.monthlyPayment;
+    if (account.funds >= loan.getMonthlyPayment()) {
+      account.funds -= loan.getMonthlyPayment();
       loan.receivePayment(account);
     } else {
       loan.receivePayment(account.funds);
-      account.funds = account.monthlyPayment;
+      account.funds = 0;
     }
   };
 
   borrower.payDay = function() {
     account.funds += account.monthlyIncome;
   };
+
+  return borrower;
 }
 
-var steve = stevesLoan = loan();
+stevesLoan = loan();
+steve = borrower(stevesLoan);
+
+while (!stevesLoan.isForeclosed()) {
+  steve.payDay();
+  steve.makePayment();
+  month++;
+  monthsUntilEvicted = month;
+}
+
