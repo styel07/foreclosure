@@ -6,32 +6,39 @@ var monthsUntilEvicted;
 
 function loan() {
   var loan = {};
-  var account = 0;
-  var borrowed = 550000;
-  var balance = 286000;
-  var monthlyPayment = 1700;
-  var defaulted = 0;
-  var defaultsToForeclose = 5;
-  var foreclosed = false;
-
-  loan.getBalance = function() {
-    return balance;
+  var account = {
+    borrowed : 550000,
+    balance : 286000,
+    monthlyPayment : 1700,
+    defaulted : 0,
+    defaultsToForeclose : 5,
+    foreclosed : false
   };
 
-  loan.receivePayment = function() {
-    return missPayment();
+  loan.getBalance = function() {
+    return account.balance;
+  };
+
+  loan.receivePayment = function(amount) {
+    if (amount < account.monthlyPayment) {
+      missPayment();
+    }
+    account.balance -= amount;
   };
 
   loan.getMonthlyPayment = function() {
     return missPayment();
   };
 
-  loan.isForclosed = function() {
+  loan.isForeclosed = function() {
     return monthlyPayment;
   };
 
   loan.missPayment = function() {
-    defaulted++;
+    account.defaulted++;
+    if (account.defaulted >= account.defaultsToForeclose) {
+      account.foreclosed = true;
+    }
   };
   return loan;
 };
